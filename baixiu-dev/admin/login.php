@@ -45,7 +45,7 @@ function login () {
   }
 
   //存一个标记
-  $_SESSION['corrent_login_user'] = $user;
+  $_SESSION['current_login_user'] = $users;
  
   // 3. 响应
   header('Location: /admin/');
