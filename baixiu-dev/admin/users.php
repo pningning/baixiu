@@ -1,3 +1,47 @@
+<?php
+//引入配置文件
+require_once '../functions.php';
+
+//获取到当前登录用户信息，如果没有获取到跳转到登录页面
+xiu_get_current_user();
+
+//添加用户
+function add_user() {
+  //TODO:验证表单
+  //TODO: 保存表单数据
+  //TODO: 添加到数据库
+}
+
+//编辑用户
+function edit_user() {
+  //TODO:校验表单信息
+  //TODO:保存提交的表单数据
+  //TODO:添加到数据库
+}
+
+//判断是不是带有id的提交
+if(empty($_GET['id'])) {
+  //判断是不是post提交
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    add_user();
+  }
+} else {
+  //TODO：根据提交过来的id查询数据，渲染到页面
+  if($SERVER['REQUEST_METHOD'] === 'POST') {
+    edit_user();
+  }
+
+
+}
+  
+
+//查询信息渲染页面
+$users = xiu_fetch_all('select * from users');
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -25,7 +69,7 @@
       </div> -->
       <div class="row">
         <div class="col-md-4">
-          <form>
+          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
             <h2>添加新用户</h2>
             <div class="form-group">
               <label for="email">邮箱</label>
@@ -67,42 +111,21 @@
               </tr>
             </thead>
             <tbody>
+            <?php foreach($users as $value): ?>
               <tr>
                 <td class="text-center"><input type="checkbox"></td>
-                <td class="text-center"><img class="avatar" src="/static/assets/img/default.png"></td>
-                <td>i@zce.me</td>
-                <td>zce</td>
-                <td>汪磊</td>
-                <td>激活</td>
+                <td class="text-center"><img class="avatar" src="<?php echo $value['avatar']?>"></td>
+                <td><?php echo $value['email']; ?></td>
+                <td><?php echo $value['slug']; ?></td>
+                <td><?php echo $value['nickname']; ?></td>
+                <td><?php echo $value['status'] === 'activated' ? '激活' : '待激活'; ?></td>
                 <td class="text-center">
-                  <a href="post-add.php" class="btn btn-default btn-xs">编辑</a>
+                  <a href="/admin/users.php?id=<?php echo $value['id'];?>" class="btn btn-default btn-xs">编辑</a>
                   <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
                 </td>
               </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td class="text-center"><img class="avatar" src="/static/assets/img/default.png"></td>
-                <td>i@zce.me</td>
-                <td>zce</td>
-                <td>汪磊</td>
-                <td>激活</td>
-                <td class="text-center">
-                  <a href="post-add.php" class="btn btn-default btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td class="text-center"><img class="avatar" src="/static/assets/img/default.png"></td>
-                <td>i@zce.me</td>
-                <td>zce</td>
-                <td>汪磊</td>
-                <td>激活</td>
-                <td class="text-center">
-                  <a href="post-add.php" class="btn btn-default btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
+              <?php endforeach; ?>
+              
             </tbody>
           </table>
         </div>
@@ -115,6 +138,10 @@
 
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script>
+    //TODO：给checkbox添加改变事件，通过事件得到被选中的checkbox的id，根据被选中的checkbox的数量，判断批量删除的显示
+    //TODO:设置批量删除的herf,提交表单，掉转到服务端进行接收查询
+  </script>
   <script>NProgress.done()</script>
 </body>
 </html>

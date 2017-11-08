@@ -1,3 +1,14 @@
+<?php
+  require_once '../functions.php';
+  //获取用户登录信息
+  xiu_get_current_user();
+
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -23,7 +34,7 @@
       <!-- <div class="alert alert-danger">
         <strong>错误！</strong>发生XXX错误
       </div> -->
-      <form class="row">
+      <form class="row" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
         <div class="col-md-9">
           <div class="form-group">
             <label for="title">标题</label>

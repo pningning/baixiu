@@ -1,3 +1,11 @@
+<?php
+  require_once '../functions.php';
+  //获取用户登录信息
+  xiu_get_current_user();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -13,13 +21,8 @@
   <script>NProgress.start()</script>
 
   <div class="main">
-    <nav class="navbar">
-      <button class="btn btn-default navbar-btn fa fa-bars"></button>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="profile.php"><i class="fa fa-user"></i>个人中心</a></li>
-        <li><a href="logout.php"><i class="fa fa-sign-out"></i>退出</a></li>
-      </ul>
-    </nav>
+    <!-- 引入标头 -->
+    <?php include 'inc/navbar.php'; ?>
     <div class="container-fluid">
       <div class="page-title">
         <h1>导航菜单</h1>

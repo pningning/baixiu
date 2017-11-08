@@ -1,7 +1,17 @@
+<?php
+//这里的路径是根据引入这个文件的路径来写，如果要解决这个问题，可以物理路径
+require_once '../functions.php';
+$current_page = isset($current_page) ? $current_page : '';
+//获取到用户登录信息，利用session里面的cookie 
+$current_user = xiu_get_current_user();
+
+
+?>
+
 <div class="aside">
   <div class="profile">
-    <img class="avatar" src="/static/uploads/avatar.jpg">
-    <h3 class="name">布头儿</h3>
+    <img class="avatar" src="<?php echo $current_user['avatar']; ?>">
+    <h3 class="name"><?php echo $current_user['nickname']; ?></h3>
   </div>
   <ul class="nav">
     <li<?php echo $current_page === 'index' ? ' class="active"' : '' ?>>

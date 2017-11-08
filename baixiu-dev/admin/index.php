@@ -3,8 +3,8 @@
 require_once '../config.php';
 
 // 校验数据当前访问用户的 箱子（session）有没有登录的登录标识
-session_start();
 
+session_start();
 if (empty($_SESSION['current_login_user'])) {
   // 没有当前登录用户信息，意味着没有登录
   header('Location: /admin/login.php');
@@ -12,7 +12,7 @@ if (empty($_SESSION['current_login_user'])) {
 }
 
 //建立链接
-$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$conn = mysqli_connect(XIU_DB_HOST, XIU_DB_USER, XIU_DB_PASS, XIU_DB_NAME);
 
 if(!$conn) {
   die('<<h1>链接失败</h1>>');

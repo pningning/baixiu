@@ -1,3 +1,11 @@
+<?php
+  require_once '../functions.php';
+  //获取用户登录信息
+  xiu_get_current_user();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

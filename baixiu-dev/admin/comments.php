@@ -1,3 +1,10 @@
+<?php
+
+require_once '../functions.php';
+
+xiu_get_current_user();
+
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -30,13 +37,7 @@
           <button class="btn btn-warning btn-sm">批量拒绝</button>
           <button class="btn btn-danger btn-sm">批量删除</button>
         </div>
-        <ul class="pagination pagination-sm pull-right">
-          <li><a href="#">上一页</a></li>
-          <li><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">下一页</a></li>
-        </ul>
+        <ul class="pagination pagination-sm pull-right"></ul>
       </div>
       <table class="table table-striped table-bordered table-hover">
         <thead>
@@ -47,47 +48,10 @@
             <th>评论在</th>
             <th>提交于</th>
             <th>状态</th>
-            <th class="text-center" width="100">操作</th>
+            <th class="text-center" width="150">操作</th>
           </tr>
         </thead>
-        <tbody>
-          <tr class="danger">
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>未批准</td>
-            <td class="text-center">
-              <a href="post-add.html" class="btn btn-info btn-xs">批准</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>已批准</td>
-            <td class="text-center">
-              <a href="post-add.html" class="btn btn-warning btn-xs">驳回</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>已批准</td>
-            <td class="text-center">
-              <a href="post-add.html" class="btn btn-warning btn-xs">驳回</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
   </div>
@@ -95,8 +59,78 @@
   <?php $current_page = 'comments'; ?>
   <?php include 'inc/sidebar.php'; ?>
 
+  <script id="comments_tmpl" type="text/x-jsrender">
+    {{for comments}}
+    {{!-- <tr><td>{{:#index}}</td><td>{{:content}}</td></tr> --}}
+    <tr{{if status == 'held'}} class="warning"{{else status == 'rejected'}} class="danger"{{/if}}>
+      <td class="text-center"><input type="checkbox"></td>
+      <td>{{:author}}</td>
+      <td>{{:content}}</td>
+      <td>《{{:post_title}}》</td>
+      <td>{{:created}}</td>
+      <td>{{:status}}</td>
+      <td class="text-center">
+        {{if status == 'held'}}
+        <a href="post-add.html" class="btn btn-info btn-xs">批准</a>
+        <a href="post-add.html" class="btn btn-warning btn-xs">拒绝</a>
+        {{/if}}
+        <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+      </td>
+    </tr>
+    {{/for}}
+  </script>
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script src="/static/assets/vendors/jsrender/jsrender.js"></script>
+  <script src="/static/assets/vendors/twbs-pagination/jquery.twbsPagination.js"></script>
+  <script>
+    // nprogress
+    $(document)
+     .ajaxStart(function () {
+       NProgress.start()
+     })
+     .ajaxStop(function () {
+       NProgress.done()
+     })
+
+    // 发送 AJAX 请求获取列表所需数据
+    // $.getJSON('/admin/api/comments.php', { page: 1 }, function (res) {
+    //   // 请求得到响应过后自动执行
+    //   // 将数据渲染到页面上
+    //   var html = $('#comments_tmpl').render({ comments: res })
+    //   $('tbody').html(html)
+    //   // 准备一个给模板使用的数据
+    //   // var data = {}
+    //   // data.comments = res
+    //   // var html = $('#comments_tmpl').render(data)
+    //   // console.log(html)
+    // })
+
+    function loadPageData (page) {
+      $('tbody').fadeOut()
+      $.getJSON('/admin/api/comments.php', { page: page }, function (res) {
+
+        var html = $('#comments_tmpl').render({ comments: res.comments })
+        $('tbody').html(html).fadeIn()
+        abc(res.total_pages)
+      })
+      
+    }
+
+    loadPageData(1)
+
+    function abc(total_pages) {
+      $('.pagination').twbsPagination({
+      totalPages: total_pages,
+      visiablePages: 5,
+      onPageClick: function (e, page) {
+        // 第一次初始化时就会触发一次
+        loadPageData(page)
+      }
+    })
+    }
+
+  </script>
   <script>NProgress.done()</script>
 </body>
 </html>

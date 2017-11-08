@@ -1,3 +1,12 @@
+<?php 
+//引入公共函数
+require_once '../functions.php';
+//获取当前登录用户信息
+xiu_get_current_user();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -29,7 +38,7 @@
           <div class="col-sm-6">
             <label class="form-image">
               <input id="avatar" type="file">
-              <img src="/static/assets/img/default.png">
+              <img src="/static/assets/img/default.png" id="img">
               <i class="mask fa fa-upload"></i>
             </label>
           </div>
@@ -64,7 +73,7 @@
         <div class="form-group">
           <div class="col-sm-offset-3 col-sm-6">
             <button type="submit" class="btn btn-primary">更新</button>
-            <a class="btn btn-link" href="password-reset.html">修改密码</a>
+            <a class="btn btn-link" href="password-reset.php">修改密码</a>
           </div>
         </div>
       </form>
@@ -76,6 +85,28 @@
 
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script>
+    $(function($) {
+      //注册给文件域注册改变事件
+      $('#avatar').on('change', function() {
+        //准备要上传的数据 客户端跟服务端通过二进制的方式传送数据
+        var formData = new FormData();
+        formData.append('file', this.files[0]);
+        //发送ajax请求
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/api/upload.php');
+        xhr.send(formData);
+
+        xhr.onload = function() {
+         $('#img').prop('src', xhr.response);
+          console.log(xhr.response);
+        }
+        
+      })
+
+
+    })
+  </script>
   <script>NProgress.done()</script>
 </body>
 </html>
